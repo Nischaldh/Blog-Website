@@ -1,0 +1,11 @@
+const errorHandler = async(ctx, next)=>{
+    try {
+    await next();
+  } catch (err) {
+    ctx.status = err.status || 500;
+    ctx.body = { message: err.message || "Server error" };
+    console.error(err.message);
+  }
+}
+
+export default errorHandler
