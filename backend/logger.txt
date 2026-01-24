@@ -11,3 +11,6 @@ Request in /api/auth/singup from localhost:3000 with method POST in 3
 Request in /api/auth/singup from localhost:3000 with method POST in 0
 Request in /api/auth/signup from localhost:3000 with method POST in 0
 Request in /api/auth/signup from localhost:3000 with method POST in 106
+Request in /api/auth/signup from localhost:3000 with method POST in 155
+Request in /api/auth/login from localhost:3000 with method POST in 147
+Request in /api/auth/login from localhost:3000 with method POST in 162
