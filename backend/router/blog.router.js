@@ -1,11 +1,11 @@
 import Router from 'koa-router';
-import { getAllblog, getBlog, postBlog } from '../controller/blog.controller.js';
+import { getAllBlog, getBlog, postBlog } from '../controller/blog.controller.js';
 
 
 const blogRouter = new Router({prefix:"/blogs"});
 
 
-blogRouter.get("/",getAllblog)
+blogRouter.get("/", getAllBlog)
 
 blogRouter.post("/",postBlog)
 
