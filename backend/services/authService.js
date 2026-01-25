@@ -7,7 +7,7 @@ export const signUpServive = async (name, email, password) => {
   try {
     // first step check if user exists:
     const userExists = await checkUserByEmail(email);
-    if (userExists.success) {
+    if (userExists) {
       return {
         success: false,
         message: "User with email already exits.",
@@ -29,8 +29,7 @@ export const signUpServive = async (name, email, password) => {
 
 export const logInService = async (email, password) => {
   try {
-    const userExists = await checkUserByEmail(email);
-    const {user} = userExists
+    const user = await checkUserByEmail(email);
     const hashedPassword = user
       ? user.password
       : env.DUMMY_HASH;

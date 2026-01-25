@@ -36,6 +36,4 @@ export const signup = async(ctx)=>{
         user:response.user,
         token: response.token,
     }
-
 }
-
