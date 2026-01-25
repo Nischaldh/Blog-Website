@@ -14,3 +14,11 @@ Request in /api/auth/signup from localhost:3000 with method POST in 106
 Request in /api/auth/signup from localhost:3000 with method POST in 155
 Request in /api/auth/login from localhost:3000 with method POST in 147
 Request in /api/auth/login from localhost:3000 with method POST in 162
+Request in /api/user/342066cc-7003-49e2-8586-5f9f99f9746e from localhost:3000 with method GET in 5
+Request in /api/user/342066cc-7003-49e2-8586-5f9f99f9746e from localhost:3000 with method GET in 56
+Request in /api/user/342066cc-7003-49e2-8586-5f9f99f9746e from localhost:3000 with method GET in 77
+Request in /api/user/updateProfile from localhost:3000 with method PATCH in 204
+Request in /api/user/updateProfile from localhost:3000 with method PATCH in 118
+Request in /api/user/updateProfile from localhost:3000 with method PATCH in 112
+Request in /api/user/updateProfile from localhost:3000 with method PATCH in 127
+Request in /api/user/updatePic?image from localhost:3000 with method PUT in 4173

@@ -17,8 +17,6 @@ export const login = async(ctx)=>{
         user: response.user,
         token: response.token
     }
-
-    
 }
 
 
