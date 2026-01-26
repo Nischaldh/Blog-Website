@@ -18,6 +18,7 @@ import generateSlug from "../lib/slugify.js";
 export const getAllBlogService = async () => {
   try {
     const blogs = await getAllBlogDB();
+    console.log(blogs)
     if (blogs.length === 0) {
       return { code: 404, success: false, message: "There are no blogs" };
     }
@@ -176,40 +177,3 @@ export const deleteBlogService = async (blogId) => {
   }
 };
 
-export const commentBlogService = async (blogId, userId, content) => {
-  try {
-    const blog = await getBlogByIdDB(blogId);
-    if (!blog) {
-      return { success: false, code: 404, message: "Blog not found" };
-    }
-    const comment = await addCommentDB(blogId, userId, content);
-    if (!comment) {
-      return { success: false, code: 404, message: "Blog not found" };
-    }
-    return { success: true, comment };
-  } catch (error) {
-    console.error("Get All Blog Service Error: ", error);
-    return {
-      success: false,
-      code: 500,
-      message: "Internal Server Error",
-    };
-  }
-};
-
-export const getCommentsBlogService = async (blogId) => {
-  try {
-    const comments = await getCommentsForBlogDB(blogId);
-    if (!comments) {
-      return { success: false, code: 404, message: "Comments not found" };
-    }
-    return { success: true, comments };
-  } catch (error) {
-    console.error("Get All Blog Service Error: ", error);
-    return {
-      success: false,
-      code: 500,
-      message: "Internal Server Error",
-    };
-  }
-};

@@ -17,7 +17,6 @@ export const updateProfile = async (ctx) => {
       ctx.throw(validateEmail.code, validateEmail.message);
     }
   }
-
   if (newPassword) {
     const validatePassword = passwordValidation(newPassword);
     if (!validatePassword.success) {

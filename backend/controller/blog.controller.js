@@ -1,11 +1,9 @@
 import { normalizeTags } from "../lib/lib.js";
 import {
-  commentBlogService,
   deleteBlogService,
   getAllBlogService,
   getBlogByIdService,
   getBlogBySlugService,
-  getCommentsBlogService,
   postBlogService,
   updateBlogService,
 } from "../services/blogService.js";
@@ -117,34 +115,6 @@ export const deleteBlog = async (ctx) => {
   };
 };
 
-export const comment = async (ctx) => {
-  const { content } = ctx.request.body;
-  const blogId = ctx.params.id;
-  const userId = ctx.state.user.id;
-  if (!blogId || !content) {
-    ctx.throw(400, "Blog ID and content are required");
-  }
-  const response = await commentBlogService(blogId, userId, content);
-  if (!response.success) {
-    ctx.throw(response.code, response.message);
-  }
-  ctx.status = 201;
-  ctx.body = {
-    success: true,
-    message: "Comment added successfully",
-    comment: response.comment,
-  };
-};
 
-export const getComments = async (ctx) => {
-  const blogId = ctx.params.blogId;
-  const response = await getCommentsBlogService(blogId);
-  if (!response.success) {
-    ctx.throw(response.code, response.message);
-  }
-  ctx.status = 200;
-  ctx.body = {
-    success: true,
-    comments: response.comments,
-  };
-};
+
+

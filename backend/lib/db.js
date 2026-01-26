@@ -62,7 +62,7 @@ export const getBlogBySlugDB = async (slug) => {
   const query = `SELECT b.* , u.name as author_name 
                   FROM blogs b
                   JOIN users u on u.id = b.author_id
-                  where b.slug = $1 AND b.is_deleted = false;`;
+                  where b.slug = $1 AND b.is_deleted = false AND b.status = 'PUBLISHED';`;
   const result = await pool.query(query, [slug]);
   return result.rows[0] || null;
 };
@@ -83,6 +83,7 @@ export const getAllBlogDB = async () => {
                   WHERE b.is_deleted = false AND b.status = 'PUBLISHED'
                   ORDER BY b.created_at DESC;`;
   const result = await pool.query(query);
+  console.log(result.rows);
   return result.rows || null;
 };
 
@@ -152,7 +153,7 @@ export const getCommentsForBlogDB= async (blogId) => {
     ORDER BY c.created_at ASC;
   `;
   const result = await pool.query(query, [blogId]);
-  return result.rows||null;
+  return result.rows|| null;
 };
 
 
@@ -199,3 +200,55 @@ export const clearBlogTagsDB = async (blogId) => {
   const query = `DELETE FROM blog_tags WHERE blog_id = $1`;
   await pool.query(query, [blogId]);
 };
+
+
+export const getCommentByIdDB = async (id)=>{
+  const query = `SELECT c.*, u.name as user_name
+    FROM comments c
+    JOIN users u ON u.id = c.user_id
+    WHERE c.id = $1 AND c.is_deleted = false;`;
+  const result = await pool.query(query, [id]);
+  return result.rows[0]||null;
+}
+
+export const getAllCommentsDB = async()=>{
+  const query = `SELECT c.*, u.name as user_name
+    FROM comments c
+    JOIN users u ON u.id = c.user_id
+    WHERE c.is_deleted = false
+    ORDER BY c.created_at ASC;`;
+  const result = await pool.query(query);
+  return result.rows|| null;
+}
+
+export const getCommentByUserDB = async (userId)=>{
+  const query = `SELECT c.*, u.name as user_name
+                FROM comments c 
+                JOIN users u on u.id = c.user_id
+                WHERE c.user_id = $1 AND c.is_deleted = false;`;
+  const result = await pool.query(query,[userId])
+  return result.rows||null;
+}
+
+export const deleteCommentDB = async (commentId)=>{
+  const query = `
+    UPDATE comments
+    SET is_deleted = true
+    WHERE id = $1
+    RETURNING *;
+  `;
+  const result = await pool.query(query, [commentId]);
+  return result.rows[0] || null;
+}
+
+export const editCommentDB = async(commentId, content)=>{
+  const query  = `
+    UPDATE comments
+    SET content = $1
+    WHERE id = $2 AND is_deleted = false
+    RETURNING *;
+  `;
+  const value = [content, commentId]
+  const result = await pool.query(query, value);
+  return result.rows[0] || null;
+}

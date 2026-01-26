@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import { comment, deleteBlog, editBlog, getAllBlog, getBlog, getBlogBySlug, getComments, postBlog } from '../controller/blog.controller.js';
+import {  deleteBlog, editBlog, getAllBlog, getBlog, getBlogBySlug, postBlog } from '../controller/blog.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 
 
@@ -16,9 +16,6 @@ blogRouter.get("/:id",getBlog)
 blogRouter.post("/",postBlog);
 blogRouter.patch('/:id',editBlog);
 blogRouter.delete("/:id",deleteBlog)
-blogRouter.post("/:id/comment",comment)
-blogRouter.get("/:id/comment",getComments)
-
 
 
 export { blogRouter, publicRouter };
