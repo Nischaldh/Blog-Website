@@ -18,7 +18,7 @@ import generateSlug from "../lib/slugify.js";
 export const getAllBlogService = async () => {
   try {
     const blogs = await getAllBlogDB();
-    console.log(blogs)
+    console.log(blogs);
     if (blogs.length === 0) {
       return { code: 404, success: false, message: "There are no blogs" };
     }
@@ -94,16 +94,29 @@ export const getBlogByTitleService = async (title) => {
 
 export const postBlogService = async (blogData) => {
   try {
-    const { title, content, authorId, status, tags = [] } = blogData;
+    const {
+      title,
+      content,
+      authorId,
+      status,
+      tags = [],
+      primaryImage,
+      secondaryImage1,
+      secondaryImage2,
+    } = blogData;
     const slug = await generateSlug(title);
     const postBlogData = {
       title,
       slug,
       content,
       authorId,
+      primaryImage,
+      secondaryImage1,
+      secondaryImage2,
       status,
     };
     const blog = await createBlogDB(postBlogData);
+
 
     if (tags.length > 0) {
       const tagIds = [];
@@ -176,4 +189,3 @@ export const deleteBlogService = async (blogId) => {
     };
   }
 };
-

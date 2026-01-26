@@ -4,6 +4,7 @@ import {
   getAllBlogService,
   getBlogByIdService,
   getBlogBySlugService,
+  getBlogByTitleService,
   postBlogService,
   updateBlogService,
 } from "../services/blogService.js";
@@ -44,12 +45,29 @@ export const postBlog = async (ctx) => {
   if (!title || !content) {
     ctx.throw(400, "Title and content are required");
   }
+  const files = ctx.files;
+
+  if (!files?.primaryImage) {
+    ctx.throw(400, "Primary image is required");
+  }
+
+  const primaryImage = files.primaryImage[0].path;
+  const secondaryImage1 = files.secondaryImage1?.[0]?.path || null;
+  const secondaryImage2 = files.secondaryImage2?.[0]?.path || null;
+
   const tagsArray = normalizeTags(tags);
+
+  if(tagsArray.length===0){
+    ctx.throw(400, "At least one tag is required");
+  }
   const blogData = {
     title,
     content,
     authorId,
     status: status || "DRAFT",
+    primaryImage,
+    secondaryImage1,
+    secondaryImage2,
     tags: tagsArray,
   };
   const response = await postBlogService(blogData);
@@ -115,6 +133,17 @@ export const deleteBlog = async (ctx) => {
   };
 };
 
+export const getBlogByTitle = async (ctx) => {
+  const { title } = ctx.query;
+  console.log(title);
+  if (!title) {
+    ctx.throw(400, "Title query is required");
+  }
 
-
-
+  const response = await getBlogByTitleService(title);
+  if (!response.success) {
+    ctx.throw(response.code, response.message);
+  }
+  ctx.status = 200;
+  ctx.body = { success: true, blog: response.blogs };
+};

@@ -109,9 +109,9 @@ export const getBlogsByTitleDB = async(title)=>{
 }
 
 export const createBlogDB = async (blogData)=>{
-  const {title, slug, content, authorId, status} = blogData;
-  const query = `INSERT INTO blogs (title, slug, content, author_id, status) VALUES ($1,$2,$3,$4,$5) RETURNING *`;
-  const values = [title, slug, content, authorId, status];
+  const {title, slug, content, authorId, status, primaryImage, secondaryImage1, secondaryImage2} = blogData;
+  const query = `INSERT INTO blogs (title, slug, content, author_id, status, primary_image, secondary_image_1, secondary_image_2) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`;
+  const values = [title, slug, content, authorId, status, primaryImage, secondaryImage1, secondaryImage2];
   const response = await pool.query(query, values);
   return response.rows[0]||null;
 }

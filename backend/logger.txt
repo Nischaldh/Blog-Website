@@ -156,3 +156,7 @@ Request in /api/comment/2d49574c-0778-4688-8fba-6e391d3d673f from localhost:3000
 Request in /api/comment/cf18d10a-965e-4477-9dc6-5c6fab59730a from localhost:3000 with method POST in 21
 Request in /api/comment/cf18d10a-965e-4477-9dc6-5c6fab59730a from localhost:3000 with method POST in 4
 Request in /api/public/comments/blog/cf18d10a-965e-4477-9dc6-5c6fab59730a from localhost:3000 with method GET in 18
+Request in /api/public/blogs/title/How from localhost:3000 with method GET in 54
+Request in /api/public/blogs/title/How from localhost:3000 with method GET in 36
+Request in /api/public/blogs/title?title=How%20to%20cook from localhost:3000 with method GET in 51
+Request in /api/blogs from localhost:3000 with method POST in 3815
