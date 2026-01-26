@@ -5,11 +5,22 @@ import {
   getBlogByIdService,
   getBlogBySlugService,
   getBlogByTitleService,
+  getBlogsFromTagsService,
   postBlogService,
   updateBlogService,
 } from "../services/blogService.js";
 
 export const getAllBlog = async (ctx) => {
+  const {title} = ctx.query;
+  if(title){
+    const response = await getBlogByTitleService(title);
+    if (!response.success) {
+      ctx.throw(response.code, response.message);
+    }
+    ctx.status = 200;
+    ctx.body = { success: true, blog: response.blogs };
+    return;
+  }
   const response = await getAllBlogService();
   if (!response.success) {
     ctx.throw(response.code, response.message);
@@ -133,17 +144,37 @@ export const deleteBlog = async (ctx) => {
   };
 };
 
-export const getBlogByTitle = async (ctx) => {
-  const { title } = ctx.query;
-  console.log(title);
-  if (!title) {
-    ctx.throw(400, "Title query is required");
-  }
+// export const getBlogByTitle = async (ctx) => {
+//   const { title } = ctx.query;
+//   console.log(title);
+//   if (!title) {
+//     ctx.throw(400, "Title query is required");
+//   }
 
-  const response = await getBlogByTitleService(title);
+//   const response = await getBlogByTitleService(title);
+//   if (!response.success) {
+//     ctx.throw(response.code, response.message);
+//   }
+//   ctx.status = 200;
+//   ctx.body = { success: true, blog: response.blogs };
+// };
+
+export const getBlogsFromTags = async (ctx) => {
+  const { tag } = ctx.query;
+
+  if (!tag) {
+    ctx.throw(400, "Please Provide a Tag.");
+  }
+  const firtLetter = tag.charAt(0).toUpperCase();
+  const restLetters = tag.slice(1).toLowerCase();
+  const formattedTag = firtLetter + restLetters;
+  const response = await getBlogsFromTagsService(formattedTag);
   if (!response.success) {
     ctx.throw(response.code, response.message);
   }
   ctx.status = 200;
-  ctx.body = { success: true, blog: response.blogs };
-};
+  ctx.body = {
+    success: true,
+    blogs: response.blogs,
+  };
+}

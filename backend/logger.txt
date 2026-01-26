@@ -160,3 +160,34 @@ Request in /api/public/blogs/title/How from localhost:3000 with method GET in 54
 Request in /api/public/blogs/title/How from localhost:3000 with method GET in 36
 Request in /api/public/blogs/title?title=How%20to%20cook from localhost:3000 with method GET in 51
 Request in /api/blogs from localhost:3000 with method POST in 3815
+Request in /api/blogs/tag from localhost:3000 with method GET in 76
+Request in /api/blogs/tag?tag=it from localhost:3000 with method GET in 68
+Request in /api/blogs/tag?tag=code from localhost:3000 with method GET in 4
+Request in /api/blogs/tag?tag=Code from localhost:3000 with method GET in 7
+Request in /api/blogs/tag?tag=code from localhost:3000 with method GET in 74
+Request in /api/comment/user/user from localhost:3000 with method GET in 6
+Request in /api/comment/user/comment from localhost:3000 with method GET in 3
+Request in /api/comment/user/comment from localhost:3000 with method GET in 45
+Request in /api/comment/c77d00b3-e69a-4763-8820-720d277cae23 from localhost:3000 with method POST in 28
+Request in /api/comment/user/user from localhost:3000 with method GET in 1
+Request in /api/comment/user/comment from localhost:3000 with method GET in 68
+Request in /api/comment/user/comment from localhost:3000 with method GET in 3
+Request in /api/comment/user/comment from localhost:3000 with method GET in 33
+Request in /api/auth/login from localhost:3000 with method POST in 404
+Request in /api/public/blogs/title?title=How from localhost:3000 with method GET in 47 ms
+Request in /api/public/blogs from localhost:3000 with method GET in 40 ms
+Request in /api/public/blogs?title=How%20to%20code from localhost:3000 with method GET in 23 ms
+Request in /api/public/blogs?title=How%20to%20Code from localhost:3000 with method GET in 3 ms
+Request in /api/auth/login from localhost:3000 with method POST in 112 ms
+Request in /api/users/comments from localhost:3000 with method GET in 6 ms
+Request in /api/users/comments from localhost:3000 with method GET in 71 ms
+Request in /api/users/ from localhost:3000 with method GET in 1 ms
+Request in /api/users/5ea1b87b-f5a0-42a9-884c-513da138164c from localhost:3000 with method GET in 20 ms
+Request in /api/public/blogs/c77d00b3-e69a-4763-8820-720d277cae23/comments from localhost:3000 with method GET in 44 ms
+Request in /api/public/blogs/c77d00b3-e69a-4763-8820-720d277cae23/comments from localhost:3000 with method GET in 3 ms
+Request in /api/comment/c77d00b3-e69a-4763-8820-720d277cae23 from localhost:3000 with method POST in 1 ms
+Request in /api/comment/c77d00b3-e69a-4763-8820-720d277cae23 from localhost:3000 with method POST in 0 ms
+Request in /api/comment/c77d00b3-e69a-4763-8820-720d277cae23 from localhost:3000 with method POST in 0 ms
+Request in /api/comments/c77d00b3-e69a-4763-8820-720d277cae23 from localhost:3000 with method POST in 109 ms
+Request in /api/public/blogs/c77d00b3-e69a-4763-8820-720d277cae23/comments from localhost:3000 with method GET in 5 ms
+Request in /api/auth/signup from localhost:3000 with method POST in 141 ms

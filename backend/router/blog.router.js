@@ -5,20 +5,24 @@ import {
   getAllBlog,
   getBlog,
   getBlogBySlug,
-  getBlogByTitle,
+  // getBlogByTitle,
+  getBlogsFromTags,
   postBlog,
 } from "../controller/blog.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { uploadBlogImages } from "../middleware/uploadBlogImage.js";
+import { getAllCommentForBlog } from "../controller/comment.controller.js";
 
 const publicRouter = new Router({ prefix: "/public/blogs" });
 
 publicRouter.get("/", getAllBlog);
-publicRouter.get("/title", getBlogByTitle);
+publicRouter.get("/:blogId/comments", getAllCommentForBlog);
 publicRouter.get("/:slug", getBlogBySlug);
 
 const blogRouter = new Router({ prefix: "/blogs" });
 
+
+blogRouter.get("/tag",getBlogsFromTags)
 blogRouter.use(authMiddleware);
 blogRouter.get("/:id", getBlog);
 blogRouter.post(

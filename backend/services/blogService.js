@@ -12,6 +12,7 @@ import {
   getTagsForBlogDB,
   updateBlogDB,
   getOrCreateTagDB,
+  getBlogByTagDB,
 } from "../lib/db.js";
 import generateSlug from "../lib/slugify.js";
 
@@ -189,3 +190,20 @@ export const deleteBlogService = async (blogId) => {
     };
   }
 };
+
+export const getBlogsFromTagsService = async (tagNames) => {
+  try {
+    const blogs = await getBlogByTagDB(tagNames);
+    if (!blogs) {
+      return { success: false, code: 404, message: "Blogs not found" };
+    }
+    return { success: true, blogs };
+  } catch (error) {
+    console.error("Get Blogs From Tags Service Error: ", error);
+    return {
+      success: false,
+      code: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

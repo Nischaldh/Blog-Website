@@ -252,3 +252,17 @@ export const editCommentDB = async(commentId, content)=>{
   const result = await pool.query(query, value);
   return result.rows[0] || null;
 }
+
+export const getBlogByTagDB = async (tagName)=>{
+  const query  = `
+    SELECT b.*, u.name as author_name
+    FROM blogs b
+    JOIN users u ON u.id = b.author_id
+    JOIN blog_tags bt ON bt.blog_id = b.id
+    JOIN tags t ON t.id = bt.tag_id
+    WHERE t.name = $1 AND b.is_deleted = false AND b.status = 'PUBLISHED'
+    ORDER BY b.created_at DESC;
+  `;
+  const result = await pool.query(query, [tagName]);
+  return result.rows || null;
+}

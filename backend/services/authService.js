@@ -1,12 +1,17 @@
+import { AppDataSource } from "../config/type-orm.js";
 import { comparePassword, hashPassword } from "../lib/bcypt.js";
 import { checkUserByEmail, createUser } from "../lib/db.js";
 import env from "../lib/env.js";
 import { generateToken } from "../lib/jwt.js";
+import { User } from "../models/User.entity.js";
+
+const userRepository = AppDataSource.getRepository(User);
 
 export const signUpServive = async (name, email, password) => {
   try {
     // first step check if user exists:
-    const userExists = await checkUserByEmail(email);
+    // const userExists = await checkUserByEmail(email);
+    const userExists = await userRepository.findOne({ where: { email } });
     if (userExists) {
       return {
         success: false,
@@ -18,9 +23,19 @@ export const signUpServive = async (name, email, password) => {
     const hashedPassword = await hashPassword(password);
 
     // create new user
-    const newUser = await createUser(name, email, hashedPassword);
+    // const newUser = await createUser(name, email, hashedPassword);
+    const newUser = userRepository.create({
+      name,
+      email,
+      password: hashedPassword,
+      image: env.DEFAULT_AVATAR,
+    });
+    await userRepository.save(newUser);
+
     const token = generateToken(newUser);
-    return { success: true, user: newUser, token };
+    const { password: _, ...userWithoutPassword } = newUser;
+
+    return { success: true, user: userWithoutPassword, token };
   } catch (error) {
     console.error("Signup Service Error:", error);
     return { success: false, message: "Internal server error", code: 500 };
@@ -30,9 +45,7 @@ export const signUpServive = async (name, email, password) => {
 export const logInService = async (email, password) => {
   try {
     const user = await checkUserByEmail(email);
-    const hashedPassword = user
-      ? user.password
-      : env.DUMMY_HASH;
+    const hashedPassword = user ? user.password : env.DUMMY_HASH;
 
     const isMatch = await comparePassword(password, hashedPassword);
     if (!user || !isMatch) {
@@ -44,7 +57,7 @@ export const logInService = async (email, password) => {
     }
     delete user.password;
     const token = generateToken(user);
-    return {success:true , user: user, token}
+    return { success: true, user: user, token };
   } catch (error) {
     console.error("Login Service Error:", error);
     return { success: false, message: "Internal server error", code: 500 };
