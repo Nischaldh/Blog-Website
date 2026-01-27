@@ -1,4 +1,5 @@
 import { emailValidation, passwordValidation } from "../lib/validation.js";
+import { getBlogsByUserService } from "../services/blogService.js";
 import {
   getUserService,
   updateProfilePicService,
@@ -81,3 +82,19 @@ export const getUser = async (ctx) => {
     user: response.user,
   };
 };
+
+
+export const getBlogsByUser = async(ctx)=>{
+  const userId = ctx.state.user.id;
+  
+  const response = await getBlogsByUserService(userId);
+  if(!response.success){
+    ctx.throw(response.code,response.message);
+  }
+
+  ctx.status = 200;
+  ctx.body = {
+    message : "Blogs by user fetched successfully",
+    blogs : response.blogs,
+  };  
+}

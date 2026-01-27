@@ -33,9 +33,9 @@ export const signUpServive = async (name, email, password) => {
     await userRepository.save(newUser);
 
     const token = generateToken(newUser);
-    const { password: _, ...userWithoutPassword } = newUser;
+    delete newUser.password;
 
-    return { success: true, user: userWithoutPassword, token };
+    return { success: true, user: newUser, token };
   } catch (error) {
     console.error("Signup Service Error:", error);
     return { success: false, message: "Internal server error", code: 500 };
@@ -44,7 +44,12 @@ export const signUpServive = async (name, email, password) => {
 
 export const logInService = async (email, password) => {
   try {
-    const user = await checkUserByEmail(email);
+    // using query and db
+    // const user = await checkUserByEmail(email);
+
+    // using type orm
+    const user = await userRepository.findOne({where:{email}, select :["id","name","email","password","image"]});
+
     const hashedPassword = user ? user.password : env.DUMMY_HASH;
 
     const isMatch = await comparePassword(password, hashedPassword);
@@ -57,7 +62,7 @@ export const logInService = async (email, password) => {
     }
     delete user.password;
     const token = generateToken(user);
-    return { success: true, user: user, token };
+    return { success: true, user, token };
   } catch (error) {
     console.error("Login Service Error:", error);
     return { success: false, message: "Internal server error", code: 500 };

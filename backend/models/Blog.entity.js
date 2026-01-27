@@ -28,11 +28,11 @@ export const Blog = new EntitySchema({
       type: "text",
       nullable: false,
     },
-    secondary_image1: {
+    secondary_image_1: {
       type: "text",
       nullable: true,
     },
-    secondary_image2: {
+    secondary_image_2: {
       type: "text",
       nullable: true,
     },
@@ -71,6 +71,11 @@ export const Blog = new EntitySchema({
         inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
       },
       cascade: true,
+    },
+    comments: {
+      type: "one-to-many",
+      target: "Comment",
+      inverseSide: "blog",
     },
   },
 });

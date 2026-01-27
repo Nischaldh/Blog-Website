@@ -21,7 +21,7 @@ export const getAllComment = async (ctx) => {
 };
 
 export const getAllCommentForBlog = async (ctx) => {
-  const blogId = ctx.params.blogId;
+  const {blogId} = ctx.params;
   const response = await getAllCommentsForBlogService(blogId);
   if (!response.success) {
     ctx.throw(response.code, response.message);
@@ -62,8 +62,7 @@ export const getCommentsByUser = async (ctx) => {
 };
 
 export const postComment = async (ctx) => {
-  const { content } = ctx.request.body;
-  const blogId = ctx.params.blogId;
+  const { content, blogId } = ctx.request.body;
   const userId = ctx.state.user.id;
   if (!blogId || !content) {
     ctx.throw(400, "Blog ID and content are required");
@@ -87,7 +86,7 @@ export const deleteComment = async (ctx) => {
   if (!respone.success) {
     ctx.throw(respone.code, respone.message);
   }
-  const commentUserId = respone.comment.user_id;
+  const commentUserId = respone.comment.user.id;
   if (commentUserId !== userId) {
     ctx.throw(403, "Unauthorized to delete this comment.");
   }
@@ -113,9 +112,9 @@ export const editComment = async (ctx) => {
   if (!respone.success) {
     ctx.throw(respone.code, respone.message);
   }
-  const commentUserId = respone.comment.user_id;
+  const commentUserId = respone.comment.user.id;
   if (commentUserId !== userId) {
-    ctx.throw(403, "Unauthorized to delete this comment.");
+    ctx.throw(403, "Unauthorized to edit this comment.");
   }
   const editedComment = await editCommentService(commentId, content);
   if (!editedComment.success) {

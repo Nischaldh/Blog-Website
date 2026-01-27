@@ -33,7 +33,7 @@ export const getBlog = async (ctx) => {
   const id = ctx.params.id;
   const userId = ctx.state.user.id;
   const response = await getBlogByIdService(id);
-  if (userId !== response.blog.author_id) {
+  if (userId !== response.blog.author.id) {
     ctx.throw(401, "Unauthorized.");
   }
   ctx.status = 200;
@@ -97,7 +97,7 @@ export const editBlog = async (ctx) => {
   const blogId = ctx.params.id;
   const userId = ctx.state.user.id;
   const data = await getBlogByIdService(blogId);
-  if (userId !== data.blog.author_id) {
+  if (userId !== data.blog.author.id) {
     ctx.throw(401, "Unauthorized.");
   }
   const { title, content, status, tags } = ctx.request.body;
@@ -129,7 +129,7 @@ export const deleteBlog = async (ctx) => {
   const blogId = ctx.params.id;
   const userId = ctx.state.user.id;
   const data = await getBlogByIdService(blogId);
-  if (userId !== data.blog.author_id) {
+  if (userId !== data.blog.author.id) {
     ctx.throw(401, "Unauthorized.");
   }
   const response = await deleteBlogService(blogId);
@@ -165,10 +165,9 @@ export const getBlogsFromTags = async (ctx) => {
   if (!tag) {
     ctx.throw(400, "Please Provide a Tag.");
   }
-  const firtLetter = tag.charAt(0).toUpperCase();
-  const restLetters = tag.slice(1).toLowerCase();
-  const formattedTag = firtLetter + restLetters;
-  const response = await getBlogsFromTagsService(formattedTag);
+  const tagArray = tag.split(",").map(t => t.trim()).filter(Boolean);
+
+  const response = await getBlogsFromTagsService(tagArray);
   if (!response.success) {
     ctx.throw(response.code, response.message);
   }

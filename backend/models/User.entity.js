@@ -23,6 +23,7 @@ export const User = new EntitySchema({
     password: {
       type: "text",
       nullable: false,
+      select: false,
     },
     image: {
       type: "text",

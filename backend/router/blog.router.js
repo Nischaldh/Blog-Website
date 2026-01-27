@@ -16,13 +16,13 @@ import { getAllCommentForBlog } from "../controller/comment.controller.js";
 const publicRouter = new Router({ prefix: "/public/blogs" });
 
 publicRouter.get("/", getAllBlog);
+publicRouter.get("/tag",getBlogsFromTags)
 publicRouter.get("/:blogId/comments", getAllCommentForBlog);
 publicRouter.get("/:slug", getBlogBySlug);
 
 const blogRouter = new Router({ prefix: "/blogs" });
 
 
-blogRouter.get("/tag",getBlogsFromTags)
 blogRouter.use(authMiddleware);
 blogRouter.get("/:id", getBlog);
 blogRouter.post(
