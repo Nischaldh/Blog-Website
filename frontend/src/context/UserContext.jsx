@@ -6,7 +6,7 @@ import {
   updateProfileService,
   updateProfilePicService,
 } from "@/service/UserService";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import { useToast } from "./ToastContext";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   const toast = useToast();
 
   // Get all users
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = useCallback(async () => {
     setLoading(true);
     const res = await getAllUsersService();
     if (res.success) {
@@ -28,19 +28,22 @@ export const UserProvider = ({ children }) => {
     }
     setLoading(false);
     return res;
-  };
+  }, [toast]);
 
   // Get user by ID
-  const fetchUserById = async (id) => {
-    const res = await getUserByIdService(id);
-    if (!res.success) {
-      toast.error(res.message || "Failed to load user profile.");
-    }
-    return res;
-  };
+  const fetchUserById = useCallback(
+    async (id) => {
+      const res = await getUserByIdService(id);
+      if (!res.success) {
+        toast.error(res.message || "Failed to load user profile.");
+      }
+      return res;
+    },
+    [toast],
+  );
 
   // Get current user's blogs
-  const fetchUserBlogs = async () => {
+  const fetchUserBlogs = useCallback(async () => {
     setLoading(true);
     const res = await getUserBlogsService();
     setLoading(false);
@@ -48,10 +51,10 @@ export const UserProvider = ({ children }) => {
       toast.error(res.message || "Failed to load your blogs.");
     }
     return res;
-  };
+  }, [toast]);
 
   // Get current user's comments
-  const fetchUserComments = async () => {
+  const fetchUserComments = useCallback(async () => {
     setLoading(true);
     const res = await getUserCommentsService();
     setLoading(false);
@@ -59,29 +62,35 @@ export const UserProvider = ({ children }) => {
       toast.error(res.message || "Failed to load your comments.");
     }
     return res;
-  };
+  }, [toast]);
 
   // Update user profile
-  const updateProfile = async (payload) => {
-    const res = await updateProfileService(payload);
-    if (res.success) {
-      toast.success("Profile updated successfully!");
-    } else {
-      toast.error(res.message || "Failed to update profile.");
-    }
-    return res;
-  };
+  const updateProfile = useCallback(
+    async (payload) => {
+      const res = await updateProfileService(payload);
+      if (res.success) {
+        toast.success(res.message || "Profile updated successfully!");
+      } else {
+        toast.error(res.message || "Failed to update profile.");
+      }
+      return res;
+    },
+    [toast],
+  );
 
   // Update profile picture
-  const updateProfilePic = async (file) => {
-    const res = await updateProfilePicService(file);
-    if (res.success) {
-      toast.success("Profile picture updated successfully!");
-    } else {
-      toast.error(res.message || "Failed to update profile picture.");
-    }
-    return res;
-  };
+  const updateProfilePic = useCallback(
+    async (file) => {
+      const res = await updateProfilePicService(file);
+      if (res.success) {
+        toast.success(res.message || "Profile picture updated successfully!");
+      } else {
+        toast.error(res.message || "Failed to update profile picture.");
+      }
+      return res;
+    },
+    [toast],
+  );
 
   return (
     <UserContext.Provider

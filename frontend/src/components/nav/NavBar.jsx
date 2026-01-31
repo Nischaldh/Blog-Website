@@ -17,7 +17,7 @@ const NavBar = () => {
       {/* Desktop Navigation */}
       <div className="max-sm:hidden">
         {isAuthenticated && user ? (
-          <UserDropDown image={user.profilePic || assest.default} user={user} />
+          <UserDropDown image={user.image || assest.default} user={user} />
         ) : (
           <Link to="/login">
             <Button

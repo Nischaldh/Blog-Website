@@ -13,24 +13,20 @@ const HomePage = () => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      // Filter blogs based on search query
       const filtered = blogs.filter((blog) =>
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilteredBlogs(filtered);
     } else {
-      // Show all blogs if no search query
       setFilteredBlogs(blogs);
     }
   }, [searchQuery, blogs]);
 
   const handleSearch = (query) => {
     if (query.trim()) {
-      // Update URL with search query
       setSearchParams({ title: query });
     } else {
-      // Clear search query from URL
       setSearchParams({});
     }
   };

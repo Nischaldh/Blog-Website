@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FileText, Save } from "lucide-react";
 import ImageUploadBox from "./ImageUploadBox";
 
 const BlogForm = ({ 
@@ -12,7 +13,8 @@ const BlogForm = ({
   },
   isEditMode = false,
   onSubmit,
-  onCancel
+  onSaveDraft,
+  onCancel,
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [tagInput, setTagInput] = useState("");
@@ -22,6 +24,9 @@ const BlogForm = ({
     secondary_image1: false,
     secondary_image2: false,
   });
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
 
   const handleAddTag = (e) => {
     if (e.key === "Enter" || e.key === ",") {
@@ -57,20 +62,59 @@ const BlogForm = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSaveDraft = async () => {
+    if (!onSaveDraft) return;
+    
+    // Basic validation for draft - only require title or content
+    if (!formData.title.trim() && !formData.content.trim()) {
+      setErrors({ 
+        title: "Please add at least a title or content before saving as draft" 
+      });
+      return;
+    }
+
+    setIsSavingDraft(true);
+    setDraftSaved(false);
+    
+    try {
+      await onSaveDraft(formData);
+      setDraftSaved(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => setDraftSaved(false), 3000);
+    } catch (error) {
+      console.error("Error saving draft:", error);
+    } finally {
+      setIsSavingDraft(false);
+    }
+  };
+
+  const handlePublish = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      setIsPublishing(true);
+      await onSubmit(formData);
+      setIsPublishing(false);
     }
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">
-        {isEditMode ? "Edit Blog" : "Upload New Blog"}
-      </h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">
+          {isEditMode ? "Edit Blog" : "Create New Blog"}
+        </h1>
+        
+        {/* Draft saved indicator */}
+        {draftSaved && (
+          <div className="flex items-center gap-2 text-sm text-green-600">
+            <FileText className="w-4 h-4" />
+            <span>Draft saved successfully!</span>
+          </div>
+        )}
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handlePublish} className="space-y-8">
         {/* Title */}
         <div>
           <label className="block text-sm font-medium mb-2">
@@ -203,8 +247,8 @@ const BlogForm = ({
           />
         </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end gap-4">
+        {/* Action Buttons */}
+        <div className="flex justify-between items-center pt-6 border-t">
           <button
             type="button"
             onClick={onCancel}
@@ -212,13 +256,50 @@ const BlogForm = ({
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            {isEditMode ? "Update Blog" : "Publish Blog"}
-          </button>
+          
+          <div className="flex gap-4">
+            {/* Save as Draft Button */}
+            {onSaveDraft && (
+              <button
+                type="button"
+                onClick={handleSaveDraft}
+                disabled={isSavingDraft}
+                className="px-6 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isSavingDraft ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    Save as Draft
+                  </>
+                )}
+              </button>
+            )}
+            
+            {/* Publish Button */}
+            <button
+              type="submit"
+              disabled={isPublishing}
+              className="px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isPublishing ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Publishing...
+                </>
+              ) : (
+                <>Publish Blog</>
+              )}
+            </button>
+          </div>
         </div>
+        <p className="text-sm text-gray-500 text-center">
+          Save your work as a draft to continue later, or publish to make it live immediately.
+        </p>
       </form>
     </div>
   );

@@ -28,7 +28,7 @@ export const getAllBlogService = async () => {
     // const blogs = await getAllBlogDB();
     const blogs = await blogRepo.find({
       where: { is_deleted: false, status: "PUBLISHED" },
-      relations: ["author", "tags","comments","comments.user"],
+      relations: ["author", "tags", "comments", "comments.user"],
       order: { created_at: "DESC" },
     });
     // console.log(blogs);
@@ -201,8 +201,7 @@ export const postBlogService = async (blogData) => {
         secondaryImage1,
         secondaryImage2,
       } = blogData;
-
-      const slug = await generateSlug(title);
+      const slug = status === "PUBLISHED" ? await generateSlug(title) : null;
 
       const blog = blogRepo.create({
         title,
@@ -309,6 +308,10 @@ export const updateBlogService = async (blogId, blogData) => {
 
       blog.title = blogData.title ?? blog.title;
       blog.content = blogData.content ?? blog.content;
+      if (blogData.status === "PUBLISHED" && blog.status === "DRAFT") {
+        blog.slug = await generateSlug(blog.title);
+      }
+
       blog.status = blogData.status ?? blog.status;
 
       if (blogData.primaryImage) {
@@ -422,13 +425,14 @@ export const getBlogsByUserService = async (userId) => {
       order: { created_at: "DESC" },
     });
 
-    if (!blogs.length) {
-      return {
-        code: 404,
-        success: false,
-        message: "No blogs found for this user",
-      };
-    }
+    // if (!blogs.length) {
+    //   return {
+    //     code: 404,
+    //     success: false,
+    //     message: "No blogs found for this user",
+    //   };
+    // }
+    console.log(blogs);
     return { success: true, blogs };
   } catch (error) {
     console.error("Get Blogs By User Service Error: ", error);

@@ -1,27 +1,30 @@
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import { useComment } from "@/hooks/useContexts";
+import { Link } from "react-router-dom";
 
 const MyComments = ({ comments: initialComments }) => {
-  const [comments, setComments] = useState(initialComments);
+  const { editComment, deleteComment } = useComment();
   const [editingComment, setEditingComment] = useState(null);
   const [editedContent, setEditedContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleEditComment = (comment) => {
     setEditingComment(comment.id);
     setEditedContent(comment.content);
   };
 
-  const handleSaveComment = (commentId) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === commentId
-          ? { ...comment, content: editedContent }
-          : comment
-      )
-    );
-    setEditingComment(null);
-    setEditedContent("");
-    alert("Comment updated successfully!");
+  const handleSaveComment = async (commentId) => {
+    if (!editedContent.trim()) return;
+
+    setIsSubmitting(true);
+    const result = await editComment(commentId, editedContent);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      setEditingComment(null);
+      setEditedContent("");
+    }
   };
 
   const handleCancelEdit = () => {
@@ -29,33 +32,37 @@ const MyComments = ({ comments: initialComments }) => {
     setEditedContent("");
   };
 
-  const handleDeleteComment = (commentId) => {
+  const handleDeleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments(comments.filter((comment) => comment.id !== commentId));
-      alert("Comment deleted successfully!");
+      await deleteComment(commentId);
     }
   };
 
   return (
     <div className="w-full mt-8">
-      <h2 className="text-2xl font-semibold mb-4">My Comments</h2>
       <div className="space-y-4">
-        {comments.length > 0 ? (
-          comments.map((comment) => (
+        {initialComments.length > 0 ? (
+          initialComments.map((comment) => (
             <div
               key={comment.id}
               className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition"
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="flex-1">
-                  <a
-                    href={`/blog/${comment.blogSlug}`}
+                  <Link
+                    to={`/blog/${comment.blogSlug || comment.blog?.slug}`}
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    {comment.blogTitle}
-                  </a>
+                    {comment.blogTitle || comment.blog?.title || "Blog Post"}
+                  </Link>
                   <p className="text-xs text-gray-500 mt-1">
-                    {new Date(comment.created_at).toLocaleDateString()}
+                    {new Date(comment.created_at || comment.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -63,6 +70,7 @@ const MyComments = ({ comments: initialComments }) => {
                     onClick={() => handleEditComment(comment)}
                     className="text-blue-500 hover:text-blue-700 p-1"
                     title="Edit comment"
+                    disabled={editingComment === comment.id}
                   >
                     <Pencil size={16} />
                   </button>
@@ -70,6 +78,7 @@ const MyComments = ({ comments: initialComments }) => {
                     onClick={() => handleDeleteComment(comment.id)}
                     className="text-red-500 hover:text-red-700 p-1"
                     title="Delete comment"
+                    disabled={isSubmitting}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -83,17 +92,20 @@ const MyComments = ({ comments: initialComments }) => {
                     onChange={(e) => setEditedContent(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={3}
+                    disabled={isSubmitting}
                   />
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => handleSaveComment(comment.id)}
-                      className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                      disabled={isSubmitting || !editedContent.trim()}
+                      className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Save
+                      {isSubmitting ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-sm"
+                      disabled={isSubmitting}
+                      className="px-4 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-sm disabled:opacity-50"
                     >
                       Cancel
                     </button>

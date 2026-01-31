@@ -52,11 +52,17 @@ export const postCommentService = async (blogId, userId, content) => {
       user: { id: userId },
     });
     await commentRepo.save(comment);
+    const savedComment = await commentRepo.findOne({
+      where: { id: comment.id },
+      relations: ["user"],
+    });
+
+
 
     // if (!comment) {
     //   return { success: false, code: 404, message: "Blog not found" };
     // }
-    return { success: true, comment };
+    return { success: true, comment:savedComment };
   } catch (error) {
     console.error("Post Comment service: ", error);
     return {
@@ -76,10 +82,10 @@ export const getAllCommentsForBlogService = async (blogId) => {
       order: { created_at: "ASC" },
     });
 
-    if (!comments.length) {
-      return { success: false, code: 404, message: "Comments not found" };
-    }
-    return { success: true, comments };
+    // if (!comments.length) {
+    //   return { success: false, code: 404, message: "Comments not found" };
+    // }
+    return { success: true, comments:comments||[] };
   } catch (error) {
     console.error("Get All Comment for Blog Service Error: ", error);
     return {
@@ -185,8 +191,12 @@ export const editCommentService = async (commentId, content) => {
 
     comment.content = content;
     await commentRepo.save(comment);
+    const updatedComment = await commentRepo.findOne({
+      where: { id: commentId },
+      relations: ["user"],
+    });
 
-    return { success: true, editedComment: comment };
+    return { success: true, editedComment: updatedComment };
     // return { success: true, editedComment };
   } catch (error) {
     console.error("Edit Comment Service error: ", error);

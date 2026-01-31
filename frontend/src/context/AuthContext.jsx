@@ -20,13 +20,12 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       const token = localStorage.getItem("token");
       if (token) {
-        // Fetch current user data
         const res = await getCurrentUserService();
         if (res.success) {
           setUser(res.user);
           setIsAuthenticated(true);
         } else {
-          // Token invalid, clear it
+          
           localStorage.removeItem("token");
           setIsAuthenticated(false);
           setUser(null);

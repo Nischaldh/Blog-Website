@@ -1,6 +1,5 @@
 import api from "@/lib/api";
 
-
 // Public APIs
 export const getAllBlogsService = async () => {
   try {

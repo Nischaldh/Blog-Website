@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 const SearchBar = ({ onSearch, defaultValue = '' }) => {
   const [searchTerm, setSearchTerm] = useState(defaultValue);
 
-  // Update search term when defaultValue changes (e.g., from URL)
   useEffect(() => {
     setSearchTerm(defaultValue);
   }, [defaultValue]);

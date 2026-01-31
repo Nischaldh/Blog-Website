@@ -66,11 +66,7 @@ export const getUser = async (ctx) => {
   if (!userId) {
     ctx.throw(400, "User id is required");
   }
-  const loggedInUserId = ctx.state.user.id;
-  if (userId !== loggedInUserId) {
-    ctx.throw(403, "Unauthorized access to user data");
-  }
-
+ 
   const response = await getUserService(userId);
 
   if (!response.success) {
@@ -80,6 +76,7 @@ export const getUser = async (ctx) => {
   ctx.body = {
     message: "User fetched successfully",
     user: response.user,
+    success:true,
   };
 };
 
@@ -96,5 +93,6 @@ export const getBlogsByUser = async(ctx)=>{
   ctx.body = {
     message : "Blogs by user fetched successfully",
     blogs : response.blogs,
+    success:true
   };  
 }

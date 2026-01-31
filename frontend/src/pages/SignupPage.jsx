@@ -3,9 +3,6 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext.jsx";
 
-
-  
-
 const SignupPage = () => {
   const { signup } = useContext(AuthContext);
   const navigate = useNavigate();

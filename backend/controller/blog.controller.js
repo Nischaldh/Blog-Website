@@ -53,13 +53,18 @@ export const getBlogBySlug = async (ctx) => {
 export const postBlog = async (ctx) => {
   const { title, content, status, tags } = ctx.request.body;
   const authorId = ctx.state.user.id;
-  if (!title || !content) {
-    ctx.throw(400, "Title and content are required");
+  const isDraft = status === "DRAFT";
+
+  if(!isDraft){
+
+    if (!title || !content) {
+      ctx.throw(400, "Title and content are required");
+    }
   }
   const files = ctx.files;
 
-  if (!files?.primaryImage) {
-    ctx.throw(400, "Primary image is required");
+  if (!isDraft && !files?.primaryImage) {
+    ctx.throw(400, "Primary image is required for published blogs");
   }
 
   const primaryImage = files.primaryImage[0].path;
@@ -68,19 +73,21 @@ export const postBlog = async (ctx) => {
 
   const tagsArray = normalizeTags(tags);
 
-  if (tagsArray.length === 0) {
-    ctx.throw(400, "At least one tag is required");
+ if (!isDraft && tagsArray.length === 0) {
+    ctx.throw(400, "At least one tag is required for published blogs");
   }
+
   const blogData = {
-    title,
-    content,
+    title: title || "Untitled Draft",
+    content: content || "",
     authorId,
     status: status || "DRAFT",
     primaryImage,
     secondaryImage1,
     secondaryImage2,
-    tags: tagsArray,
+    tags: tagsArray.length > 0 ? tagsArray : ["draft"],
   };
+
   const response = await postBlogService(blogData);
   if (!response.success) {
     ctx.throw(response.code, response.message);

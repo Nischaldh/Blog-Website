@@ -12,10 +12,37 @@ const userRepository = AppDataSource.getRepository(User);
 export const getUserService = async (userId) => {
   try {
     // const user = await getUserById(userId);
-    const user = await userRepository.findOne({
-      where: { id: userId },
-      select: ["id", "name", "email", "image", "created_at"],
-    });
+    const user = await userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect(
+        "user.blogs",
+        "blog",
+        "blog.status = :status AND blog.is_deleted = false",
+        { status: "PUBLISHED" },
+      )
+      .leftJoinAndSelect("blog.tags", "tag") // Join tags
+      .leftJoinAndSelect(
+        "blog.comments",
+        "comment",
+        "comment.is_deleted = false",
+      ) 
+      .where("user.id = :id", { id: userId })
+      .select([
+        "user.id",
+        "user.name",
+        "user.image",
+        "user.created_at",
+        "blog.id",
+        "blog.title",
+        "blog.slug",
+        "blog.content",
+        "blog.primary_image",
+        "blog.created_at",
+        "tag.id",
+        "tag.name",
+        "comment.id",
+      ])
+      .getOne();
 
     if (!user) {
       return {
@@ -24,6 +51,7 @@ export const getUserService = async (userId) => {
         message: "User not found",
       };
     }
+
     return {
       success: true,
       user,

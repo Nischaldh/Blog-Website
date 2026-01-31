@@ -6,6 +6,8 @@ const generateSlug = async (title) => {
     .trim()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-");
+  
+  
   const query = `
     SELECT slug 
     FROM blogs 
@@ -14,7 +16,10 @@ const generateSlug = async (title) => {
   const result = await pool.query(query, [`${baseSlug}%`]);
   const existingSlugs = result.rows.map((row) => row.slug);
 
+  console.log("🔍 Existing slugs found:", existingSlugs);
+
   if (!existingSlugs.includes(baseSlug)) {
+    console.log("✅ Using base slug:", baseSlug);
     return baseSlug;
   }
 

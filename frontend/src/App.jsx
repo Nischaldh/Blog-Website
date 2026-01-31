@@ -66,6 +66,14 @@ const App = () => {
             }
           />
           <Route
+            path="/blog/edit/id/:id" 
+            element={
+            <ProtectedRoute>
+            <EditBlog />
+           </ProtectedRoute>
+          }
+          />
+          <Route
             path="/blog/edit/:slug"
             element={
               <ProtectedRoute>
@@ -73,6 +81,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/settings"
             element={
@@ -84,7 +93,7 @@ const App = () => {
         </Routes>
       </div>
 
-      {/* Toast Container for notifications */}
+    
       <ToastContainer
         position="top-right"
         autoClose={3000}

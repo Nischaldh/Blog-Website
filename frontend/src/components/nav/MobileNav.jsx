@@ -46,7 +46,7 @@ const MobileNav = () => {
           {/* NAV LINKS */}
           <SheetClose asChild>
             <nav className="flex flex-col gap-4">
-              {/* Home - Always visible */}
+      
               <Link to="/">
                 <Button variant="ghost" className="w-full justify-start gap-3">
                   <Home size={18} />
@@ -54,13 +54,7 @@ const MobileNav = () => {
                 </Button>
               </Link>
 
-              {/* About - Always visible */}
-              <Link to="/about">
-                <Button variant="ghost" className="w-full justify-start gap-3">
-                  <Info size={18} />
-                  <h3 className="text-xl">About</h3>
-                </Button>
-              </Link>
+
 
               {/* Authenticated-only links */}
               {isAuthenticated && (

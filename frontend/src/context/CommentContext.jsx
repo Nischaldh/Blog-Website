@@ -6,7 +6,7 @@ import {
   getCommentsForBlogService,
   postCommentService,
 } from "@/service/CommentService";
-import { createContext, useState } from "react";
+import { createContext, useState, useCallback } from "react";
 import { useToast } from "./ToastContext";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -18,46 +18,49 @@ export const CommentProvider = ({ children }) => {
   const toast = useToast();
 
   // Fetch all public comments
-  const fetchAllComments = async () => {
+  const fetchAllComments = useCallback(async () => {
     setLoading(true);
     const res = await getAllCommentsService();
     if (res.success) {
       setComments(res.comments);
+     
     } else {
       toast.error(res.message || "Failed to load comments.");
     }
     setLoading(false);
     return res;
-  };
+  }, [toast]);
 
   // Fetch comments for a specific blog
-  const fetchCommentsForBlog = async (blogId) => {
+  const fetchCommentsForBlog = useCallback(async (blogId) => {
     setLoading(true);
     const res = await getCommentsForBlogService(blogId);
     if (res.success) {
       setComments(res.comments);
+     
     } else {
       toast.error(res.message || "Failed to load comments for this blog.");
     }
     setLoading(false);
     return res;
-  };
+  }, [toast]);
 
   // Fetch comments for the logged-in user
-  const fetchCommentsByUser = async () => {
+  const fetchCommentsByUser = useCallback(async () => {
     setLoading(true);
     const res = await getCommentsByUserService();
     if (res.success) {
       setComments(res.comments);
+      
     } else {
       toast.error(res.message || "Failed to load your comments.");
     }
     setLoading(false);
     return res;
-  };
+  }, [toast]);
 
   // Add a comment
-  const postComment = async (blogId, content) => {
+  const postComment = useCallback(async (blogId, content) => {
     const res = await postCommentService(blogId, content);
     if (res.success) {
       setComments((prev) => [...prev, res.comment]);
@@ -66,10 +69,10 @@ export const CommentProvider = ({ children }) => {
       toast.error(res.message || "Failed to post comment.");
     }
     return res;
-  };
+  }, [toast]);
 
   // Edit a comment
-  const editComment = async (id, content) => {
+  const editComment = useCallback(async (id, content) => {
     const res = await editCommentService(id, content);
     if (res.success) {
       setComments((prev) => prev.map((c) => (c.id === id ? res.comment : c)));
@@ -78,10 +81,10 @@ export const CommentProvider = ({ children }) => {
       toast.error(res.message || "Failed to update comment.");
     }
     return res;
-  };
+  }, [toast]);
 
   // Delete a comment
-  const deleteComment = async (id) => {
+  const deleteComment = useCallback(async (id) => {
     const res = await deleteCommentService(id);
     if (res.success) {
       setComments((prev) => prev.filter((c) => c.id !== id));
@@ -90,7 +93,7 @@ export const CommentProvider = ({ children }) => {
       toast.error(res.message || "Failed to delete comment.");
     }
     return res;
-  };
+  }, [toast]);
 
   return (
     <CommentContext.Provider

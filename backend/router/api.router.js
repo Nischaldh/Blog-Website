@@ -1,7 +1,7 @@
 import authRouter from "./auth.router.js";
 import {blogRouter, publicRouter} from "./blog.router.js";
 import Router from "koa-router";
-import userRouter from "./user.router.js";
+import {userRouter, publicUserRouter} from "./user.router.js";
 import { commentRouter, publicCommentRouter } from "./commentRouter.js";
 
 const apiRouter = new Router({ prefix: "/api" });
@@ -9,6 +9,7 @@ const apiRouter = new Router({ prefix: "/api" });
 // public routers
 apiRouter.use(publicRouter.routes(), publicRouter.allowedMethods());
 apiRouter.use(publicCommentRouter.routes(), publicCommentRouter.allowedMethods());
+apiRouter.use(publicUserRouter.routes(),publicUserRouter.allowedMethods());
 
 // auth router
 apiRouter.use(authRouter.routes(), authRouter.allowedMethods());

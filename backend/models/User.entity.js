@@ -1,8 +1,8 @@
 import { EntitySchema } from "typeorm";
 
 export const User = new EntitySchema({
-  name: "User",         
-  tableName: "users",    
+  name: "User",
+  tableName: "users",
   columns: {
     id: {
       type: "uuid",
@@ -38,6 +38,13 @@ export const User = new EntitySchema({
       type: "timestamp",
       updateDate: true,
       default: () => "NOW()",
+    },
+  },
+  relations: {
+    blogs: {
+      type: "one-to-many",
+      target: "Blog",
+      inverseSide: "author",
     },
   },
 });

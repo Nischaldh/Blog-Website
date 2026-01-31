@@ -1,25 +1,15 @@
 import BlogForm from "@/components/forms/BlogForm";
-import { useNavigate } from "react-router-dom";
+import { useUploadBlog } from "@/hooks/useUploadBlog";
 
 const UploadBlog = () => {
-  const navigate = useNavigate();
-
-  const handleSubmit = (formData) => {
-    console.log("Form submitted:", formData);
-    // Handle form submission here (e.g., send to API)
-    alert("Blog uploaded successfully!");
-    // navigate("/blogs"); // Navigate to blogs list after successful upload
-  };
-
-  const handleCancel = () => {
-    navigate(-1); // Go back to previous page
-  };
+  const { handleSubmit, handleSaveDraft, handleCancel } = useUploadBlog();
 
   return (
-    <BlogForm
-      isEditMode={false}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
+    <BlogForm 
+      isEditMode={false} 
+      onSubmit={handleSubmit} 
+      onSaveDraft={handleSaveDraft}
+      onCancel={handleCancel} 
     />
   );
 };

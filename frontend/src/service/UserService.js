@@ -17,7 +17,12 @@ export const getAllUsersService = async () => {
 export const getUserByIdService = async (userId) => {
   try {
     const res = await api.get(`/public/users/${userId}`);
-    return res.data;
+        return {
+      success: true,
+      user: res.data.user,
+      message: res.data.message
+    };
+
   } catch (error) {
     console.error("Get user by ID error:", error);
     return { 
@@ -31,7 +36,11 @@ export const getUserByIdService = async (userId) => {
 export const getUserBlogsService = async () => {
   try {
     const res = await api.get("/users/blogs");
-    return res.data;
+    return {
+      success: true,
+      blogs: res.data.blogs,
+      message: res.data.message
+    };
   } catch (error) {
     console.error("Get user blogs error:", error);
     return { 
@@ -44,7 +53,12 @@ export const getUserBlogsService = async () => {
 export const getUserCommentsService = async () => {
   try {
     const res = await api.get("/users/comments");
-    return res.data;
+    
+    return {
+      success: true,
+      comments: res.data.comments,
+      message: res.data.message
+    };
   } catch (error) {
     console.error("Get user comments error:", error);
     return { 
@@ -57,7 +71,11 @@ export const getUserCommentsService = async () => {
 export const updateProfileService = async (payload) => {
   try {
     const res = await api.patch("/users/updateProfile", payload);
-    return res.data;
+    return {
+      success: true,
+      user: res.data.user,
+      message: res.data.message
+    };
   } catch (error) {
     console.error("Update profile error:", error);
     return { 
@@ -78,7 +96,11 @@ export const updateProfilePicService = async (file) => {
       },
     });
 
-    return res.data;
+    return {
+      success: true,
+      user: res.data.user,
+      message: res.data.message
+    };
   } catch (error) {
     console.error("Update profile pic error:", error);
     return { 
