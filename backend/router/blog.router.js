@@ -5,7 +5,7 @@ import {
   getAllBlog,
   getBlog,
   getBlogBySlug,
-  // getBlogByTitle,
+ 
   getBlogsFromTags,
   postBlog,
 } from "../controller/blog.controller.js";
@@ -34,7 +34,11 @@ blogRouter.post(
   ]),
   postBlog,
 );
-blogRouter.patch("/:id", editBlog);
+blogRouter.patch("/:id",  uploadBlogImages.fields([
+    { name: "primaryImage", maxCount: 1 },
+    { name: "secondaryImage1", maxCount: 1 },
+    { name: "secondaryImage2", maxCount: 1 },
+  ]),editBlog);
 blogRouter.delete("/:id", deleteBlog);
 
 export { blogRouter, publicRouter };

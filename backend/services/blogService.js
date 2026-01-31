@@ -28,7 +28,7 @@ export const getAllBlogService = async () => {
     // const blogs = await getAllBlogDB();
     const blogs = await blogRepo.find({
       where: { is_deleted: false, status: "PUBLISHED" },
-      relations: ["author", "tags"],
+      relations: ["author", "tags","comments","comments.user"],
       order: { created_at: "DESC" },
     });
     // console.log(blogs);
@@ -307,12 +307,22 @@ export const updateBlogService = async (blogId, blogData) => {
         };
       }
 
-      // update scalar fields
       blog.title = blogData.title ?? blog.title;
       blog.content = blogData.content ?? blog.content;
       blog.status = blogData.status ?? blog.status;
 
-      // update tags (only if provided)
+      if (blogData.primaryImage) {
+        blog.primary_image = blogData.primaryImage;
+      }
+
+      if (blogData.secondaryImage1 !== undefined) {
+        blog.secondary_image_1 = blogData.secondaryImage1;
+      }
+
+      if (blogData.secondaryImage2 !== undefined) {
+        blog.secondary_image_2 = blogData.secondaryImage2;
+      }
+
       if (Array.isArray(blogData.tags)) {
         blog.tags = [];
 

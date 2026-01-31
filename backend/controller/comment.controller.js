@@ -57,8 +57,6 @@ export const getCommentsByUser = async (ctx) => {
     success: true,
     comments: response.comments,
   };
-  // const userId = ctx.state.user.id;
-  // ctx.body = "User Id is "+ userId;
 };
 
 export const postComment = async (ctx) => {

@@ -11,8 +11,8 @@ import {
 } from "../services/blogService.js";
 
 export const getAllBlog = async (ctx) => {
-  const {title} = ctx.query;
-  if(title){
+  const { title } = ctx.query;
+  if (title) {
     const response = await getBlogByTitleService(title);
     if (!response.success) {
       ctx.throw(response.code, response.message);
@@ -68,7 +68,7 @@ export const postBlog = async (ctx) => {
 
   const tagsArray = normalizeTags(tags);
 
-  if(tagsArray.length===0){
+  if (tagsArray.length === 0) {
     ctx.throw(400, "At least one tag is required");
   }
   const blogData = {
@@ -104,11 +104,24 @@ export const editBlog = async (ctx) => {
   const newTitle = title ? title : data.blog.title;
   const newContent = content ? content : data.blog.content;
   const newStatus = status ? status : data.blog.status;
+  const files = ctx.files || {};
+
   const blogData = {
     title: newTitle,
     content: newContent,
     status: newStatus,
   };
+  if (files.primaryImage) {
+    blogData.primaryImage = files.primaryImage[0].path;
+  }
+
+  if (files.secondaryImage1) {
+    blogData.secondaryImage1 = files.secondaryImage1[0].path;
+  }
+
+  if (files.secondaryImage2) {
+    blogData.secondaryImage2 = files.secondaryImage2[0].path;
+  }
   if (tags !== undefined) {
     blogData.tags = normalizeTags(tags);
   }
@@ -165,7 +178,10 @@ export const getBlogsFromTags = async (ctx) => {
   if (!tag) {
     ctx.throw(400, "Please Provide a Tag.");
   }
-  const tagArray = tag.split(",").map(t => t.trim()).filter(Boolean);
+  const tagArray = tag
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
 
   const response = await getBlogsFromTagsService(tagArray);
   if (!response.success) {
@@ -176,4 +192,4 @@ export const getBlogsFromTags = async (ctx) => {
     success: true,
     blogs: response.blogs,
   };
-}
+};

@@ -68,3 +68,20 @@ export const logInService = async (email, password) => {
     return { success: false, message: "Internal server error", code: 500 };
   }
 };
+
+export const getMeService = async (id)=>{
+  try {
+    const user = await userRepository.findOne({where:{id}});
+    if(!user){
+      return{
+        success:false,
+        code:404,
+        message:"User not found"
+      };
+    }
+    return {success:true , user};
+    
+  } catch (error) {
+    
+  }
+}
